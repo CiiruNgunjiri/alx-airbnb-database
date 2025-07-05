@@ -17,11 +17,15 @@ SELECT
   pay.payment_id,
   pay.amount,
   pay.payment_date,
-  pay.status AS payment_status
+  pay.payment_method
 FROM booking b
 JOIN users u ON b.user_id = u.user_id
 JOIN properties p ON b.property_id = p.property_id
-LEFT JOIN payment pay ON b.booking_id = pay.booking_id;
+LEFT JOIN payment pay ON b.booking_id = pay.booking_id
+WHERE b.start_date >= CURRENT_DATE - INTERVAL '1 year'
+ORDER BY b.start_date DESC
+LIMIT 100;
+
 
 -- -------------------------------------------------------------------
 -- To analyze performance BEFORE creating indexes, run:
@@ -42,7 +46,7 @@ LEFT JOIN payment pay ON b.booking_id = pay.booking_id;
 --   pay.payment_id,
 --   pay.amount,
 --   pay.payment_date,
---   pay.status AS payment_status
+--   pay.payment_method,
 -- FROM booking b
 -- JOIN users u ON b.user_id = u.user_id
 -- JOIN properties p ON b.property_id = p.property_id
@@ -66,7 +70,7 @@ SELECT
   pay.payment_id,
   pay.amount,
   pay.payment_date,
-  pay.status AS payment_status
+  pay.payment_method 
 FROM booking b
 JOIN users u ON b.user_id = u.user_id
 JOIN properties p ON b.property_id = p.property_id
