@@ -12,18 +12,18 @@ CREATE TABLE IF NOT EXISTS partition_booking ( booking_id UUID NOT NULL,
 ) PARTITION BY RANGE (start_date);
 
 -- Step 2: Create partitions by year (example for 3 years)
-CREATE TABLE booking_2023 PARTITION OF booking
+CREATE TABLE booking_2023 PARTITION OF partition_booking
   FOR VALUES FROM ('2023-01-01') TO ('2024-01-01');
 
-CREATE TABLE booking_2024 PARTITION OF booking
+CREATE TABLE booking_2024 PARTITION OF partition_booking
   FOR VALUES FROM ('2024-01-01') TO ('2025-01-01');
 
-CREATE TABLE booking_2025 PARTITION OF booking
+CREATE TABLE booking_2025 PARTITION OF partition_booking
   FOR VALUES FROM ('2025-01-01') TO ('2026-01-01');
 
 -- Step 3: Migrate existing data from old table to new partitioned table
-INSERT INTO booking (booking_id, user_id, property_id, start_date, end_date, created_at, updated_at)
-SELECT booking_id, user_id, property_id, start_date, end_date, created_at, updated_at FROM booking_old;
+INSERT INTO partition_booking (booking_id, user_id, property_id, start_date, end_date, created_at, updated_at)
+SELECT booking_id, user_id, property_id, start_date, end_date, created_at, updated_at FROM booking;
 
 -- Step 4: (Optional) Drop old booking table after verification
 -- DROP TABLE booking;
