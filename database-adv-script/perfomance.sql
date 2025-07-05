@@ -24,7 +24,8 @@ JOIN properties p ON b.property_id = p.property_id
 LEFT JOIN payment pay ON b.booking_id = pay.booking_id
 WHERE b.start_date >= CURRENT_DATE - INTERVAL '1 year'
 ORDER BY b.start_date DESC
-LIMIT 100;
+LIMIT 100 WHERE b.user_id IS NOT NULL AND p.property_id IS NOT NULL
+;
 
 
 -- -------------------------------------------------------------------
