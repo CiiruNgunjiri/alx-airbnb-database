@@ -1,14 +1,14 @@
 -- partitioning.sql
 
 -- Step 1: Create the new partitioned booking table
-CREATE TABLE partition_booking (
-  booking_id UUID PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS partition_booking ( booking_id UUID NOT NULL,
   user_id UUID NOT NULL,
   property_id UUID NOT NULL,
   start_date DATE NOT NULL,
   end_date DATE NOT NULL,
   created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW()
+  updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW(),
+  PRIMARY KEY (booking_id, start_date)
 ) PARTITION BY RANGE (start_date);
 
 -- Step 2: Create partitions by year (example for 3 years)
