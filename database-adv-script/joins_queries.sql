@@ -21,14 +21,19 @@ INNER JOIN users u ON b.user_id = u.user_id;
 -- 2. LEFT JOIN
 -- Retrieve all properties and their reviews, including properties that have no reviews.
 -- This query returns all properties; if a property has no reviews, review columns will be NULL.
+-- ORDER BY p.name ASC sorts properties alphabetically.
+-- ORDER BY r.created_at DESC sorts reviews by newest first within each property.
 SELECT 
     p.property_id,
     p.name,
     r.review_id,
     r.rating,
-    r.comment
+    r.comment,
+    r.created_at
 FROM properties p
-LEFT JOIN review r ON p.property_id = r.property_id;
+LEFT JOIN review r ON p.property_id = r.property_id
+ORDER BY p.name ASC, r.created_at DESC;
+
 
 
 -- 3. FULL OUTER JOIN
