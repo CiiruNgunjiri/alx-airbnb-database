@@ -45,8 +45,6 @@ WHERE b.start_date >= CURRENT_DATE - INTERVAL '1 year'
 ORDER BY b.start_date DESC
 LIMIT 100;
 
-text
-
 ---
 
 ## 📈 Performance Enhancements
