@@ -123,6 +123,93 @@ The subquery counts bookings per user, referencing the outer query's user ID.*
 - Handle NULL values in FULL OUTER JOIN results carefully in your application.
 
 ---
+### 📊 Aggregation and Window Functions
+
+Unlock powerful data analysis techniques with SQL **aggregation** and **window functions**! These queries help you summarize user activity and rank properties by popularity in your Airbnb clone database.
+
+---
+
+#### 1️⃣ Total Number of Bookings Made by Each User
+
+SELECT
+u.user_id,
+u.first_name,
+u.last_name,
+COUNT(b.booking_id) AS total_bookings
+FROM users u
+LEFT JOIN booking b ON u.user_id = b.user_id
+GROUP BY u.user_id, u.first_name, u.last_name
+ORDER BY total_bookings DESC;
+
+> **What it does:**  
+> Counts how many bookings each user has made — including those with zero bookings!  
+> Uses `COUNT()` with `GROUP BY` and a `LEFT JOIN` to include all users.  
+> Results are sorted to show the most active users first.
+
+---
+
+#### 2️⃣ Rank Properties Based on Total Number of Bookings
+
+SELECT
+property_id,
+name,
+total_bookings,
+RANK() OVER (ORDER BY total_bookings DESC) AS booking_rank
+FROM (
+SELECT
+p.property_id,
+p.name,
+COUNT(b.booking_id) AS total_bookings
+FROM properties p
+LEFT JOIN booking b ON p.property_id = b.property_id
+GROUP BY p.property_id, p.name
+) sub
+ORDER BY booking_rank;
+
+
+> **What it does:**  
+> Ranks properties by how many bookings they have received.  
+> Uses the window function `RANK()` to assign the same rank to ties.  
+> Includes properties with zero bookings thanks to `LEFT JOIN`.
+
+---
+
+#### 🔄 Optional: Unique Ranking with `ROW_NUMBER()`
+
+SELECT
+property_id,
+name,
+total_bookings,
+ROW_NUMBER() OVER (ORDER BY total_bookings DESC) AS booking_rank
+FROM (
+SELECT
+p.property_id,
+p.name,
+COUNT(b.booking_id) AS total_bookings
+FROM properties p
+LEFT JOIN booking b ON p.property_id = b.property_id
+GROUP BY p.property_id, p.name
+) sub
+ORDER BY booking_rank;
+
+> **When to use:**  
+> Use `ROW_NUMBER()` if you want each property to have a unique rank, even when booking counts tie.
+
+---
+
+### 🚀 How to Run
+
+1. Make sure your PostgreSQL database is seeded with the Airbnb clone schema and sample data.  
+2. Run these queries in your SQL client or `psql`.  
+3. Explore the results to gain insights into user booking behavior and property popularity!
+
+---
+
+✨ **Tip:** Use `EXPLAIN ANALYZE` to check query performance and optimize indexes for faster results.
+
+---
+
+---
 
 ## 🤝 Contributions & Feedback
 
